@@ -2,6 +2,12 @@
 
 AddMeFast tarzı bir yorum değişim platformu. Kullanıcılar Google Maps'te yorum yaparak coin kazanır, kendi işletmelerine yorum çekmek için coin harcar.
 
+## 🖼️ Sistemden Görünümler
+
+| Dashboard | İşletme Yönetimi |
+| :---: | :---: |
+| ![Dashboard](public/assets/screenshots/dashboard.png) | ![İşletmeler](public/assets/screenshots/businesses.png) |
+
 ## 🚀 Kurulum
 
 ### Gereksinimler
