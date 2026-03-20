@@ -1,9 +1,12 @@
 const Database = require('better-sqlite3');
 const path = require('path');
+// Vercel read-only filesystem fix: Use /tmp for SQLite in production
+const isVercel = process.env.VERCEL || process.env.NODE_ENV === 'production';
+const dbPath = isVercel 
+  ? path.join('/tmp', 'reviewcoin.db') 
+  : path.join(__dirname, '..', 'reviewcoin.db');
 
-const dbPath = path.join(__dirname, '..', 'reviewcoin.db');
 const db = new Database(dbPath);
-
 // Enable WAL mode for better performance
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
