@@ -17,8 +17,8 @@ const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || '')
   .map(e => e.trim().toLowerCase())
   .filter(Boolean);
 
-// Google OAuth Strategy (only if not in demo mode)
-if (process.env.DEMO_MODE !== 'true') {
+// Google OAuth Strategy (only if not in demo mode and keys are present)
+if (process.env.DEMO_MODE !== 'true' && process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -72,6 +72,9 @@ router.get('/google', (req, res, next) => {
   if (process.env.DEMO_MODE === 'true') {
     return res.redirect('/auth/demo-login');
   }
+  if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+    return res.status(500).send('Google OAuth credentials are not properly configured in environment variables.');
+  }
   passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
 });
 
@@ -80,6 +83,9 @@ router.get('/google/callback',
   (req, res, next) => {
     if (process.env.DEMO_MODE === 'true') {
       return res.redirect('/');
+    }
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      return res.redirect('/?error=auth_not_configured');
     }
     passport.authenticate('google', (err, user, info) => {
       if (err) {
